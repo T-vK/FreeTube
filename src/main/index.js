@@ -257,6 +257,11 @@ function createWindow () {
     createWindow()
   })
 
+  ipcMain.on('synchronize', () => {
+    mainWindow.close()
+    createWindow()
+  })
+
   ipcMain.on('enableSmoothScrolling', () => {
     app.commandLine.appendSwitch('enable-smooth-scrolling')
     mainWindow.close()

@@ -22,8 +22,6 @@ if (window && window.process && window.process.type === 'renderer') {
   dbLocation = 'settings.db'
 }
 
-console.log(dbLocation)
-
 const settingsDb = new Datastore({
   filename: dbLocation,
   autoload: true
@@ -71,7 +69,18 @@ const state = {
   hideRecommendedVideos: false,
   hideTrendingVideos: false,
   hidePopularVideos: false,
-  hideLiveChat: false
+  hideLiveChat: false,
+  syncSubscriptions: false,
+  syncHistory: false,
+  syncSettings: false,
+  syncPreferences: false,
+  syncStrategy: 'overwrite_older',
+  webdavUsername: '',
+  webdavPassword: '',
+  webdavDigestAuth: true,
+  webdavServerUrl: '',
+  webdavServerDir: '/FreeTube',
+  autoSync: false
 }
 
 const getters = {
@@ -224,6 +233,49 @@ const getters = {
   },
   getHideLiveChat: () => {
     return state.hideLiveChat
+  },
+  getSyncSubscriptions: () => {
+    return state.syncSubscriptions
+  },
+
+  getSyncHistory: () => {
+    return state.syncHistory
+  },
+
+  getSyncSettings: () => {
+    return state.syncSettings
+  },
+
+  getSyncPreferences: () => {
+    return state.syncPreferences
+  },
+
+  getAutoSync: () => {
+    return state.autoSync
+  },
+
+  getSyncStrategy: () => {
+    return state.syncStrategy
+  },
+
+  getWebdavUsername: () => {
+    return state.webdavUsername
+  },
+
+  getWebdavPassword: () => {
+    return state.webdavPassword
+  },
+
+  getWebdavDigestAuth: () => {
+    return state.webdavDigestAuth
+  },
+
+  getWebdavServerUrl: () => {
+    return state.webdavServerUrl
+  },
+
+  getWebdavServerDir: () => {
+    return state.webdavServerDir
   }
 }
 
@@ -231,7 +283,6 @@ const actions = {
   grabUserSettings ({ dispatch, commit, rootState }) {
     settingsDb.find({}, (err, results) => {
       if (!err) {
-        console.log(results)
         results.forEach((result) => {
           switch (result._id) {
             case 'invidiousInstance':
@@ -351,6 +402,39 @@ const actions = {
             case 'hideLiveChat':
               commit('setHideLiveChat', result.value)
               break
+            case 'syncSubscriptions':
+              commit('setSyncSubscriptions', result.value)
+              break
+            case 'syncHistory':
+              commit('setSyncHistory', result.value)
+              break
+            case 'syncSettings':
+              commit('setSyncSettings', result.value)
+              break
+            case 'syncPreferences':
+              commit('setSyncPreferences', result.value)
+              break
+            case 'webdavServerUrl':
+              commit('setWebdavServerUrl', result.value)
+              break
+            case 'webdavServerDir':
+              commit('setWebdavServerDir', result.value)
+              break
+            case 'webdavUsername':
+              commit('setWebdavUsername', result.value)
+              break
+            case 'webdavPassword':
+              commit('setWebdavPassword', result.value)
+              break
+            case 'webdavDigestAuth':
+              commit('setWebdavDigestAuth', result.value)
+              break
+            case 'syncStrategy':
+              commit('setSyncStrategy', result.value)
+              break
+            case 'autoSync':
+              commit('setAutoSync', result.value)
+              break
           }
         })
       }
@@ -358,7 +442,6 @@ const actions = {
   },
 
   updateInvidiousInstance ({ commit }, invidiousInstance) {
-    console.log(invidiousInstance)
     settingsDb.update({ _id: 'invidiousInstance' }, { _id: 'invidiousInstance', value: invidiousInstance }, { upsert: true }, (err, numReplaced) => {
       if (!err) {
         commit('setInvidiousInstance', invidiousInstance)
@@ -661,6 +744,94 @@ const actions = {
         commit('setHideLiveChat', hideLiveChat)
       }
     })
+  },
+
+  updateSyncSubscriptions ({ commit }, syncSubscriptions) {
+    settingsDb.update({ _id: 'syncSubscriptions' }, { _id: 'syncSubscriptions', value: syncSubscriptions }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setSyncSubscriptions', syncSubscriptions)
+      }
+    })
+  },
+
+  updateSyncHistory ({ commit }, syncHistory) {
+    settingsDb.update({ _id: 'syncHistory' }, { _id: 'syncHistory', value: syncHistory }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setSyncHistory', syncHistory)
+      }
+    })
+  },
+
+  updateSyncSettings ({ commit }, syncSettings) {
+    settingsDb.update({ _id: 'syncSettings' }, { _id: 'syncSettings', value: syncSettings }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setSyncSettings', syncSettings)
+      }
+    })
+  },
+
+  updateSyncPreferences ({ commit }, syncPreferences) {
+    settingsDb.update({ _id: 'syncPreferences' }, { _id: 'syncPreferences', value: syncPreferences }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setSyncPreferences', syncPreferences)
+      }
+    })
+  },
+
+  updateAutoSync ({ commit }, autoSync) {
+    settingsDb.update({ _id: 'autoSync' }, { _id: 'autoSync', value: autoSync }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setAutoSync', autoSync)
+      }
+    })
+  },
+
+  updateSyncStrategy ({ commit }, syncStrategy) {
+    settingsDb.update({ _id: 'syncStrategy' }, { _id: 'syncStrategy', value: syncStrategy }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setSyncStrategy', syncStrategy)
+      }
+    })
+  },
+
+  updateWebdavServerUrl ({ commit }, webdavServerUrl) {
+    settingsDb.update({ _id: 'webdavServerUrl' }, { _id: 'webdavServerUrl', value: webdavServerUrl }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setWebdavServerUrl', webdavServerUrl)
+      }
+    })
+  },
+
+  updateWebdavServerDir ({ commit }, webdavServerDir) {
+    settingsDb.update({ _id: 'webdavServerDir' }, { _id: 'webdavServerDir', value: webdavServerDir }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setWebdavServerDir', webdavServerDir)
+      }
+    })
+  },
+
+  updateWebdavUsername ({ commit }, webdavUsername) {
+    settingsDb.update({ _id: 'webdavUsername' }, { _id: 'webdavUsername', value: webdavUsername }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setWebdavUsername', webdavUsername)
+      }
+    })
+  },
+
+  updateWebdavPassword ({ commit }, webdavPassword) {
+    settingsDb.update({ _id: 'webdavPassword' }, { _id: 'webdavPassword', value: webdavPassword }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setWebdavPassword', webdavPassword)
+      }
+    })
+  },
+
+  updateWebdavDigestAuth ({ commit }, webdavDigestAuth) {
+    settingsDb.update({ _id: 'webdavDigestAuth' }, { _id: 'webdavDigestAuth', value: webdavDigestAuth }, { upsert: true }, (err, numReplaced) => {
+      if (!err) {
+        commit('setWebdavDigestAuth', webdavDigestAuth)
+      }
+    })
   }
 }
 
@@ -796,6 +967,39 @@ const mutations = {
   },
   setHideLiveChat (state, hideLiveChat) {
     state.hideLiveChat = hideLiveChat
+  },
+  setSyncSubscriptions (state, syncSubscriptions) {
+    state.syncSubscriptions = syncSubscriptions
+  },
+  setSyncHistory (state, syncHistory) {
+    state.syncHistory = syncHistory
+  },
+  setSyncSettings (state, syncSettings) {
+    state.syncSettings = syncSettings
+  },
+  setSyncPreferences (state, syncPreferences) {
+    state.syncPreferences = syncPreferences
+  },
+  setAutoSync (state, autoSync) {
+    state.autoSync = autoSync
+  },
+  setSyncStrategy (state, syncStrategy) {
+    state.syncStrategy = syncStrategy
+  },
+  setWebdavServerUrl (state, webdavServerUrl) {
+    state.webdavServerUrl = webdavServerUrl
+  },
+  setWebdavServerDir (state, webdavServerDir) {
+    state.webdavServerDir = webdavServerDir
+  },
+  setWebdavUsername (state, webdavUsername) {
+    state.webdavUsername = webdavUsername
+  },
+  setWebdavPassword (state, webdavPassword) {
+    state.webdavPassword = webdavPassword
+  },
+  setWebdavDigestAuth (state, webdavDigestAuth) {
+    state.webdavDigestAuth = webdavDigestAuth
   }
 }
 
